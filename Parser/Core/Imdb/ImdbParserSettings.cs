@@ -9,10 +9,10 @@ namespace Parser.Core.Imdb
 {
     class ImdbParserSettings : IParserSettings
     {
-        public ImdbParserSettings(int startId, Dictionary<string, string[]> queryParams = null)
+        public ImdbParserSettings(int startNumber, Dictionary<string, string[]> queryParams = null)
         {
-            StartPageId = startId;
-            QueryParams.Add("start", new[]{ startId.ToString() });
+            StartPageNumber = startNumber;
+            QueryParams.Add("start", new[]{ startNumber.ToString() });
 
             if (queryParams != null)
                 QueryParams.Merge<string, string[]>(queryParams);
@@ -28,20 +28,20 @@ namespace Parser.Core.Imdb
             }
         }
 
-        public int StartPageId { get; }
+        public int StartPageNumber { get; }
 
         // Imdb allows parse only 50 items per page
-        public int EndPageId
+        public int EndPageNumber
         {
             get
             {
-                return StartPageId;
+                return StartPageNumber;
             }
         }
 
         public Dictionary<string, string[]> QueryParams { get; } = new Dictionary<string, string[]>();
 
-        public string GetLinkByPageId(int pageId)
+        public string GetLinkByPageNumber(int pageNumber)
         {
             var link = $"{Url}/?";
             foreach (var param in QueryParams.Keys)

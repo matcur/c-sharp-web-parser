@@ -12,21 +12,21 @@ namespace Parser.Core.Metacritic
         {
             CheckPageIds(startPageId, endPageId);
 
-            StartPageId = startPageId;
-            EndPageId = endPageId;
+            StartPageNumber = startPageId;
+            EndPageNumber = endPageId;
         }
 
         public string Url { get; } = "https://www.metacritic.com/browse/games/score/metascore/all";
 
         public string Prefix { get; } = "";
 
-        public int StartPageId { get; private set; }
+        public int StartPageNumber { get; private set; }
 
-        public int EndPageId { get; private set; }
+        public int EndPageNumber { get; private set; }
 
         public Dictionary<string, string[]> QueryParams => throw new NotImplementedException();
 
-        public string GetLinkByPageId(int pageId)
+        public string GetLinkByPageNumber(int pageId)
         {
             return $"{Url}/?page={pageId}";
         }

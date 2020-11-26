@@ -12,12 +12,12 @@ namespace Parser.Core
 
         string Prefix { get; }
 
-        int StartPageId { get; }
+        int StartPageNumber { get; }
 
-        int EndPageId { get; }
+        int EndPageNumber { get; }
 
         Dictionary<string, string[]> QueryParams { get; }
 
-        string GetLinkByPageId(int pageId);
+        string GetLinkByPageNumber(int pageNumber);
     }
 }

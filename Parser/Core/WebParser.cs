@@ -8,11 +8,11 @@ namespace Parser.Core
     {
         public event DataLoaded<T> OnDataLoaded = (T data) => { };
 
+        public bool IsActive { get; private set; } = true;
         private IParser<T> parser;
         private IParserSettings settings;
         private HtmlLoader htmlLoader;
         private HtmlParser htmlParser = new HtmlParser();
-        private bool isActive = false;
 
         public WebParser(IParser<T> parser, IParserSettings settings)
         {
@@ -23,24 +23,24 @@ namespace Parser.Core
 
         public void Start()
         {
-            isActive = true;
+            IsActive = true;
             Work();
         }
 
         public void Abort()
         {
-            isActive = false;
+            IsActive = false;
         }
 
         private async void Work()
         {
-            int pageId = settings.StartPageId;
-            for (; pageId <= settings.EndPageId; pageId++)
+            int pageNumber = settings.StartPageNumber;
+            for (; pageNumber <= settings.EndPageNumber; pageNumber++)
             {
-                if (!isActive)
+                if (!IsActive)
                     return;
 
-                var htmlString = await htmlLoader.LoadByPageId(pageId);
+                var htmlString = await htmlLoader.LoadByPageId(pageNumber);
                 var htmlDom = await htmlParser.ParseDocumentAsync(htmlString, new CancellationToken());
 
                 T result = parser.Parse(htmlDom);
@@ -48,7 +48,7 @@ namespace Parser.Core
                 OnDataLoaded.Invoke(result);
             }
 
-            isActive = false;
+            IsActive = false;
         }
     }
 }
