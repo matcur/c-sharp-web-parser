@@ -34,10 +34,13 @@
             Grid.Column="1" Grid.Row="1">
             <Button
                 x:Name="ImdButton"
-                Content="Imdb парсер" Click="ImdButton_Click"
+                Click="ImdButton_Click"
+                Content="Imdb парсер"
                 />
             <Button
-                Content="Imdb"
+                x:Name="MetacriticButton"
+                Content="Metacritic парсер"
+                Click="MetacriticButton_Click"
                 />
         </StackPanel>
     </Grid>

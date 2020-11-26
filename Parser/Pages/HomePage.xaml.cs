@@ -29,6 +29,11 @@ namespace Parser.Pages
             GoToPage(new ImdbPage());
         }
 
+        private void MetacriticButton_Click(object sender, RoutedEventArgs e)
+        {
+            GoToPage(new MetacriticPage());
+        }
+
         private void GoToPage(Page page)
         {
             NavigationService.Navigate(page);

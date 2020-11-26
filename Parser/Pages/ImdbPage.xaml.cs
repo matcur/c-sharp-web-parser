@@ -31,22 +31,16 @@ namespace Parser.Pages
 
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
-            int pageId;
-            string stringPageId = startPageIdInput.Text;
-            if (!int.TryParse(stringPageId, out pageId))
-            {
-                MessageBox.Show($"You writed {stringPageId}, integer must be writed");
-                return;
-            }
-
-            Parse(pageId);
+            int startPageId;
+            TryParsePageParsingId(out startPageId);
+            Parse(startPageId);
         }
 
         private void AbortButton_Click(object sender, RoutedEventArgs e)
         {
             if (webParser != null)
             {
-                webParser.OnDataLoaded -= AddContent;
+                webParser.OnDataLoaded -= ShowContent;
                 webParser.Abort();
             }
         }
@@ -58,12 +52,12 @@ namespace Parser.Pages
                 MakeImdbParserSettings(pageId)
             );
 
-            webParser.OnDataLoaded += AddContent;
+            webParser.OnDataLoaded += ShowContent;
 
             webParser.Start();
         }
 
-        private void AddContent(Dictionary<string, string> aTags)
+        private void ShowContent(Dictionary<string, string> aTags)
         {
             Dispatcher.Invoke(() =>
             {
@@ -92,6 +86,16 @@ namespace Parser.Pages
             dict.Add("title_type", new[] { "tv_series", "tv_miniseries" });
 
             return new ImdbParserSettings(startPageId, dict);
+        }
+
+        private void TryParsePageParsingId(out int startPageId)
+        {
+            string stringStartPageId = startPageIdInput.Text;
+            if (!int.TryParse(stringStartPageId, out startPageId))
+            {
+                MessageBox.Show($"You writed {stringStartPageId}, integer must be writed");
+                throw new Exception($"String must be int, {stringStartPageId} given");
+            }
         }
     }
 }

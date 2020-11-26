@@ -78,6 +78,8 @@
     <Compile Include="Core\Imdb\ImdbParserSettings.cs" />
     <Compile Include="Core\IParser.cs" />
     <Compile Include="Core\IParserSettings.cs" />
+    <Compile Include="Core\Metacritic\MetacriticParser.cs" />
+    <Compile Include="Core\Metacritic\MetacriticParserSettings.cs" />
     <Compile Include="Core\WebParser.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -91,6 +93,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\MetacriticPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ExtensionMethods\DictionaryExtensions.cs" />
@@ -99,6 +105,9 @@
     </Compile>
     <Compile Include="Pages\ImdbPage.xaml.cs">
       <DependentUpon>ImdbPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\MetacriticPage.xaml.cs">
+      <DependentUpon>MetacriticPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
