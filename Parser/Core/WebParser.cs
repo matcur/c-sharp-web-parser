@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Threading;
+using AngleSharp.Dom;
 using AngleSharp.Html.Parser;
 
 namespace Parser.Core
 {
-    class WebParser<T> where T : class
+    class WebParser
     {
-        public event DataLoaded<T> OnDataLoaded = (T data) => { };
+        public event DataLoaded OnDataLoaded = (IHtmlCollection<IElement> data) => { };
 
         public bool IsActive { get; private set; } = true;
-        private IParser<T> parser;
+        private IParser parser;
         private IParserSettings settings;
         private HtmlLoader htmlLoader;
         private HtmlParser htmlParser = new HtmlParser();
 
-        public WebParser(IParser<T> parser, IParserSettings settings)
+        public WebParser(IParser parser, IParserSettings settings)
         {
             this.parser = parser;
             this.settings = settings;
@@ -43,8 +44,7 @@ namespace Parser.Core
                 var htmlString = await htmlLoader.LoadByPageId(pageNumber);
                 var htmlDom = await htmlParser.ParseDocumentAsync(htmlString, new CancellationToken());
 
-                T result = parser.Parse(htmlDom);
-
+                var result = parser.Parse(htmlDom);
                 OnDataLoaded.Invoke(result);
             }
 

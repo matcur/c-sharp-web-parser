@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AngleSharp.Dom;
 
 namespace Parser.Core
 {
-    public delegate void DataLoaded<T>(T data);
+    public delegate void DataLoaded(IHtmlCollection<IElement> data);
 }

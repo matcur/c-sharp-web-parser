@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AngleSharp.Dom;
 using AngleSharp.Html.Dom;
 
 namespace Parser.Core
 {
-    interface IParser<out T> where T : class
+    interface IParser
     {
-        T Parse(IHtmlDocument document);
+        IHtmlCollection<IElement> Parse(IHtmlDocument document);
     }
 }

@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using AngleSharp.Dom;
+using AngleSharp.Html.Dom;
 using Parser.Core;
 using Parser.Core.Imdb;
 
@@ -22,7 +24,7 @@ namespace Parser.Pages
     /// </summary>
     public partial class ImdbPage : Page
     {
-        private WebParser<Dictionary<string, string>> webParser;
+        private WebParser webParser;
 
         public ImdbPage()
         {
@@ -31,9 +33,18 @@ namespace Parser.Pages
 
         private void StartButton_Click(object sender, RoutedEventArgs e)
         {
-            int startPageId;
-            TryParsePageParsingId(out startPageId);
-            Parse(startPageId);
+            int startPageNumber;
+            try
+            {
+                TryParsePageNumber(out startPageNumber);
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message);
+                return;
+            }
+
+            Parse(startPageNumber);
         }
 
         private void AbortButton_Click(object sender, RoutedEventArgs e)
@@ -45,39 +56,32 @@ namespace Parser.Pages
             }
         }
 
-        private void Parse(int pageId)
+        private void Parse(int pageNumber)
         {
-            webParser = new WebParser<Dictionary<string, string>>(
+            webParser = new WebParser(
                 new ImdbParser(),
-                MakeImdbParserSettings(pageId)
+                MakeImdbParserSettings(pageNumber)
             );
 
             webParser.OnDataLoaded += ShowContent;
-
             webParser.Start();
         }
 
-        private void ShowContent(Dictionary<string, string> aTags)
+        private void ShowContent(IHtmlCollection<IElement> elements)
         {
             Dispatcher.Invoke(() =>
             {
                 int i = 0;
+
+                var aTags = elements.OfType<IHtmlAnchorElement>();
                 foreach (var item in aTags)
                 {
-                    var text = $"{++i}){item.Key} {item.Value}\n";
+                    var text = $"{++i}){item.TextContent} - {item.Href}\n";
                     contentBlock.AppendText(text);
                 }
 
                 MessageBox.Show("Successfuly loaded");
             });
-        }
-
-        private Paragraph MakeParagraphFromInline(Inline inline)
-        {
-            var paragraph = new Paragraph();
-            paragraph.Inlines.Add(inline);
-
-            return paragraph;
         }
 
         private ImdbParserSettings MakeImdbParserSettings(int startPageId)
@@ -88,13 +92,13 @@ namespace Parser.Pages
             return new ImdbParserSettings(startPageId, dict);
         }
 
-        private void TryParsePageParsingId(out int startPageId)
+        private void TryParsePageNumber(out int startPageId)
         {
-            string stringStartPageId = startPageIdInput.Text;
-            if (!int.TryParse(stringStartPageId, out startPageId))
+            string stringStartPageNumber = startPageNumberInput.Text;
+            if (!int.TryParse(stringStartPageNumber, out startPageId))
             {
-                MessageBox.Show($"You writed {stringStartPageId}, integer must be writed");
-                throw new Exception($"String must be int, {stringStartPageId} given");
+                MessageBox.Show($"You writed {stringStartPageNumber}, integer must be writed");
+                throw new Exception($"String must be int, {stringStartPageNumber} given");
             }
         }
     }

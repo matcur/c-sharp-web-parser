@@ -38,7 +38,7 @@
             Grid.Column="3" Grid.Row="1"
             Width="110">
             <TextBox 
-                x:Name="startPageIdInput"
+                x:Name="startPageNumberInput"
                 Width="auto"/>
             <Button 
                 x:Name="startButton"

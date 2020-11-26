@@ -8,12 +8,12 @@ namespace Parser.Core.Metacritic
 {
     class MetacriticParserSettings : IParserSettings
     {
-        public MetacriticParserSettings(int startPageId, int endPageId)
+        public MetacriticParserSettings(int startPageNumber, int endPageNumber)
         {
-            CheckPageIds(startPageId, endPageId);
+            CheckPageIds(startPageNumber, endPageNumber);
 
-            StartPageNumber = startPageId;
-            EndPageNumber = endPageId;
+            StartPageNumber = startPageNumber;
+            EndPageNumber = endPageNumber;
         }
 
         public string Url { get; } = "https://www.metacritic.com/browse/games/score/metascore/all";
@@ -24,22 +24,22 @@ namespace Parser.Core.Metacritic
 
         public int EndPageNumber { get; private set; }
 
-        public Dictionary<string, string[]> QueryParams => throw new NotImplementedException();
+        public Dictionary<string, string[]> QueryParams { get; private set; } = new Dictionary<string, string[]>();
 
-        public string GetLinkByPageNumber(int pageId)
+        public string GetLinkByPageNumber(int pageNumber)
         {
-            return $"{Url}/?page={pageId}";
+            return $"{Url}/?page={pageNumber}";
         }
 
-        private void CheckPageIds(int startPageId, int endPageId)
+        private void CheckPageIds(int startPageNumber, int endPageNumber)
         {
-            if (startPageId < 1)
-                throw new Exception($"Start page id must be more than 0, {startPageId} given");
+            if (startPageNumber < 1)
+                throw new Exception($"Start page id must be more than 0, {startPageNumber} given");
 
-            if (endPageId < 1)
-                throw new Exception($"Start page id must be more than 0, {endPageId} given");
+            if (endPageNumber < 1)
+                throw new Exception($"Start page id must be more than 0, {endPageNumber} given");
 
-            if (startPageId > endPageId)
+            if (startPageNumber > endPageNumber)
                 throw new Exception($"Start page id can't be less than end page id");
         }
     }

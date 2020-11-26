@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using AngleSharp.Dom;
 using Parser.Core;
 using Parser.Core.Metacritic;
 
@@ -22,7 +23,7 @@ namespace Parser.Pages
     /// </summary>
     public partial class MetacriticPage : Page
     {
-        private WebParser<List<string>> webParser;
+        private WebParser webParser;
 
         public MetacriticPage()
         {
@@ -35,7 +36,7 @@ namespace Parser.Pages
             int endPageNumber;
             try
             {
-                TryParsePageParsingIds(out startPageNumber, out endPageNumber);
+                TryParsePageNumbers(out startPageNumber, out endPageNumber);
             }
             catch(Exception exception)
             {
@@ -57,15 +58,16 @@ namespace Parser.Pages
 
         private void Parse(int startPageNumber, int endPageNumber)
         {
-            webParser = new WebParser<List<string>>(
+            webParser = new WebParser(
                 new MetacriticParser(),
                 new MetacriticParserSettings(startPageNumber, endPageNumber)
             );
+
             webParser.OnDataLoaded += ShowContent;
             webParser.Start();
         }
 
-        private void ShowContent(List<string> games)
+        private void ShowContent(IHtmlCollection<IElement> games)
         {
             if (games.Count() == 0)
                 MessageBox.Show("Игры не найдены");
@@ -73,17 +75,17 @@ namespace Parser.Pages
             Dispatcher.Invoke(() =>
             {
                 foreach (var game in games)
-                    contentBlock.AppendText($"{game}\n");
+                    contentBlock.AppendText($"{game.TextContent}\n");
             });
         }
 
-        private void TryParsePageParsingIds(out int startPageNumber, out int endPageNumber)
+        private void TryParsePageNumbers(out int startPageNumber, out int endPageNumber)
         {
-            string stringStartPageNumber = startPageIdInput.Text;
+            string stringStartPageNumber = startPageNumberInput.Text;
             if (!int.TryParse(stringStartPageNumber, out startPageNumber))
                 throw new Exception($"Start page id must be int, {stringStartPageNumber} given");
 
-            string stringEndPageNumber = endPageIdInput.Text;
+            string stringEndPageNumber = endPageNumberInput.Text;
             if (!int.TryParse(stringEndPageNumber, out endPageNumber))
                 throw new Exception($"End page id must be int, {stringEndPageNumber} given");
         }
