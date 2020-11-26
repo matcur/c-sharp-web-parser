@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,25 +12,26 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Parser.Core;
-using Parser.Core.Imdb;
-using Parser.Pages;
 
-namespace Parser
+namespace Parser.Pages
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : NavigationWindow
+    public partial class HomePage : Page
     {
-        public MainWindow()
+        public event Action<Page> OnNavigateTo = (Page page) => { };
+
+        public HomePage()
         {
             InitializeComponent();
         }
 
-        private void NavigateTo(Page page)
+        private void ImdButton_Click(object sender, RoutedEventArgs e)
         {
+            GoToPage(new ImdbPage());
+        }
 
+        private void GoToPage(Page page)
+        {
+            NavigationService.Navigate(page);
         }
     }
 }
