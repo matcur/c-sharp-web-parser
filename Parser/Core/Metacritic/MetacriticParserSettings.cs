@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Parser.Core.Metacritic
 {
@@ -28,7 +25,8 @@ namespace Parser.Core.Metacritic
 
         public string GetLinkByPageNumber(int pageNumber)
         {
-            return $"{Url}/?page={pageNumber}";
+            // Вычетаю 1 т.к отчет на metacritic начинаеься с 0
+            return $"{Url}/?page={pageNumber - 1}";
         }
 
         private void CheckPageIds(int startPageNumber, int endPageNumber)

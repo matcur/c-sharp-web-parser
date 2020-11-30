@@ -7,7 +7,7 @@
       mc:Ignorable="d" 
       d:DesignHeight="450"
       Background="White"
-      Title="Home page" Width="500">
+      Title="Home page" Width="600">
     <Page.Resources>
         <Style x:Name="LinkBlock" TargetType="Button">
             <Setter Property="Background" Value="#c3c3c3" />

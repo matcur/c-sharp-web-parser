@@ -24,7 +24,7 @@ namespace Parser.Pages
     /// </summary>
     public partial class ImdbPage : Page
     {
-        private WebParser webParser;
+        private ParserPage parserPage = new ParserPage();
 
         public ImdbPage()
         {
@@ -49,22 +49,15 @@ namespace Parser.Pages
 
         private void AbortButton_Click(object sender, RoutedEventArgs e)
         {
-            if (webParser != null)
-            {
-                webParser.OnDataLoaded -= ShowContent;
-                webParser.Abort();
-            }
+            parserPage.Abort(ShowContent);
         }
 
         private void Parse(int pageNumber)
         {
-            webParser = new WebParser(
-                new ImdbParser(),
-                MakeImdbParserSettings(pageNumber)
-            );
+            var parserSettings = MakeImdbParserSettings(pageNumber);
+            var cssSelector = ".lister-item-header > a";
 
-            webParser.OnDataLoaded += ShowContent;
-            webParser.Start();
+            parserPage.Parse(parserSettings, cssSelector, ShowContent);
         }
 
         private void ShowContent(IHtmlCollection<IElement> elements)

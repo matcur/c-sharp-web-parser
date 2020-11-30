@@ -18,7 +18,6 @@ namespace Parser.Core
         public async Task<string> LoadByPageId(int pageId)
         {
             var link = settings.GetLinkByPageNumber(pageId);
-            Console.WriteLine(link);
             var responce = await htmlClient.GetAsync(link);
 
             if (responce != null && responce.StatusCode == HttpStatusCode.OK)

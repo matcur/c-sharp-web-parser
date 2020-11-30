@@ -1,31 +1,39 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 using AngleSharp.Dom;
+using AngleSharp.Html.Dom;
 using AngleSharp.Html.Parser;
+using Parser.Core.Collections;
 
 namespace Parser.Core
 {
     class WebParser
     {
         public event DataLoaded OnDataLoaded = (IHtmlCollection<IElement> data) => { };
-
         public bool IsActive { get; private set; } = true;
-        private IParser parser;
+
         private IParserSettings settings;
+        private DomParser domParser = new DomParser();
         private HtmlLoader htmlLoader;
         private HtmlParser htmlParser = new HtmlParser();
 
-        public WebParser(IParser parser, IParserSettings settings)
+        public WebParser(IParserSettings settings)
         {
-            this.parser = parser;
             this.settings = settings;
             htmlLoader = new HtmlLoader(settings);
         }
 
-        public void Start()
+        public void Start(string cssSelector)
         {
             IsActive = true;
-            Work();
+            Parse(cssSelector);
+        }
+
+        public void StartParseFirst(string cssSelector)
+        {
+            IsActive = true;
+            ParseFirst(cssSelector);
         }
 
         public void Abort()
@@ -33,7 +41,7 @@ namespace Parser.Core
             IsActive = false;
         }
 
-        private async void Work()
+        private async void Parse(string cssSelector)
         {
             int pageNumber = settings.StartPageNumber;
             for (; pageNumber <= settings.EndPageNumber; pageNumber++)
@@ -41,14 +49,42 @@ namespace Parser.Core
                 if (!IsActive)
                     return;
 
-                var htmlString = await htmlLoader.LoadByPageId(pageNumber);
-                var htmlDom = await htmlParser.ParseDocumentAsync(htmlString, new CancellationToken());
+                var page = await LoadPage(pageNumber);
 
-                var result = parser.Parse(htmlDom);
+                var result = domParser.Parse(page, cssSelector);
                 OnDataLoaded.Invoke(result);
             }
 
             IsActive = false;
+        }
+
+        private async void ParseFirst(string cssSelector)
+        {
+            int pageNumber = settings.StartPageNumber;
+            for (; pageNumber <= settings.EndPageNumber; pageNumber++)
+            {
+                if (!IsActive)
+                    return;
+
+                var page = await LoadPage(pageNumber);
+
+                var element = domParser.ParseFirst(page, cssSelector);
+                if (element == null)
+                    continue;
+
+                var htmlCollection = new HtmlCollection<IElement>(element);
+                OnDataLoaded.Invoke(htmlCollection);
+                break;
+            }
+
+            IsActive = false;
+        }
+
+        private async Task<IHtmlDocument> LoadPage(int pageNumber)
+        {
+            var htmlString = await htmlLoader.LoadByPageId(pageNumber);
+
+            return await htmlParser.ParseDocumentAsync(htmlString, new CancellationToken());
         }
     }
 }

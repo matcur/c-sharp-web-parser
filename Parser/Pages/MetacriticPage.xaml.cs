@@ -23,7 +23,7 @@ namespace Parser.Pages
     /// </summary>
     public partial class MetacriticPage : Page
     {
-        private WebParser webParser;
+        private ParserPage parserPage = new ParserPage(); 
 
         public MetacriticPage()
         {
@@ -49,22 +49,15 @@ namespace Parser.Pages
 
         private void AbortButton_Click(object sender, RoutedEventArgs e)
         {
-            if (webParser != null)
-            {
-                webParser.Abort();
-                webParser.OnDataLoaded -= ShowContent;
-            }
+            parserPage.Abort(ShowContent);
         }
 
         private void Parse(int startPageNumber, int endPageNumber)
         {
-            webParser = new WebParser(
-                new MetacriticParser(),
-                new MetacriticParserSettings(startPageNumber, endPageNumber)
-            );
+            var parserSettings = new MetacriticParserSettings(startPageNumber, endPageNumber);
+            var cssSelector = ".clamp-summary-wrap > a.title > h3";
 
-            webParser.OnDataLoaded += ShowContent;
-            webParser.Start();
+            parserPage.Parse(parserSettings, cssSelector, ShowContent);
         }
 
         private void ShowContent(IHtmlCollection<IElement> games)

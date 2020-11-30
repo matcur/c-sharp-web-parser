@@ -7,7 +7,7 @@
       mc:Ignorable="d" 
       d:DesignHeight="450"
       Background="White"
-      Title="Imdb" Width="470">
+      Title="Imdb" Width="579">
     <Page.Resources>
         <Style x:Name="ActionButton" TargetType="Button">
             <Setter Property="Margin" Value="0,10,0,0" />
@@ -16,9 +16,9 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="10" />
-            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="0.70*" />
             <ColumnDefinition Width="20" />
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="0.25*"/>
             <ColumnDefinition Width="10" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -31,7 +31,7 @@
             x:Name="contentBlock"
             Grid.Column="1" Grid.Row="1"
             Grid.RowSpan="2"
-            Width="300"
+            Width="auto"
             HorizontalAlignment="Left" 
             VerticalAlignment="Top" />
         <StackPanel

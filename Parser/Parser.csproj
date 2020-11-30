@@ -72,13 +72,12 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Core\Collections\HtmlCollection.cs" />
     <Compile Include="Core\DataLoaded.cs" />
     <Compile Include="Core\HtmlLoader.cs" />
-    <Compile Include="Core\Imdb\ImdbParser.cs" />
     <Compile Include="Core\Imdb\ImdbParserSettings.cs" />
-    <Compile Include="Core\IParser.cs" />
+    <Compile Include="Core\DomParser.cs" />
     <Compile Include="Core\IParserSettings.cs" />
-    <Compile Include="Core\Metacritic\MetacriticParser.cs" />
     <Compile Include="Core\Metacritic\MetacriticParserSettings.cs" />
     <Compile Include="Core\WebParser.cs" />
     <Compile Include="MainWindow.xaml.cs">
@@ -109,6 +108,7 @@
     <Compile Include="Pages\MetacriticPage.xaml.cs">
       <DependentUpon>MetacriticPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\ParserPage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
