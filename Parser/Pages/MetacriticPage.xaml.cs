@@ -54,6 +54,8 @@ namespace Parser.Pages
 
         private void Parse(int startPageNumber, int endPageNumber)
         {
+            contentBlock.Cursor = Cursors.Wait;
+
             var parserSettings = new MetacriticParserSettings(startPageNumber, endPageNumber);
             var cssSelector = ".clamp-summary-wrap > a.title > h3";
 
@@ -69,6 +71,8 @@ namespace Parser.Pages
             {
                 foreach (var game in games)
                     contentBlock.AppendText($"{game.TextContent}\n");
+
+                contentBlock.Cursor = Cursors.Arrow;
             });
         }
 

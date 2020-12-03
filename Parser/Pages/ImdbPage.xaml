@@ -7,7 +7,7 @@
       mc:Ignorable="d" 
       d:DesignHeight="450"
       Background="White"
-      Title="Imdb" Width="579">
+      Title="Imdb" Width="570">
     <Page.Resources>
         <Style x:Name="ActionButton" TargetType="Button">
             <Setter Property="Margin" Value="0,10,0,0" />
@@ -27,30 +27,41 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="10" />
         </Grid.RowDefinitions>
-        <RichTextBox
-            x:Name="contentBlock"
+        <ListView
+            ItemsSource="{Binding FoundFilms, UpdateSourceTrigger=PropertyChanged}"
             Grid.Column="1" Grid.Row="1"
             Grid.RowSpan="2"
             Width="auto"
             HorizontalAlignment="Left" 
-            VerticalAlignment="Top" />
+            VerticalAlignment="Top">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding}" />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
         <StackPanel
             Grid.Column="3" Grid.Row="1"
             Width="110">
             <TextBox 
                 x:Name="startPageNumberInput"
-                Width="auto"/>
+                Width="auto"
+                Text="{Binding StartPageNumber}"/>
             <Button 
-                x:Name="startButton"
                 Width="auto"
                 Style="{Binding ActionButton}"
-                Content="Start" Click="StartButton_Click"/>
+                Command="{Binding ParseCommand}"
+                Content="Start"/>
             <Button 
-                x:Name="abortButton"
                 Width="auto"
                 Style="{Binding ActionButton}"
-                Click="AbortButton_Click"
+                Command="{Binding AbortParseCommand}"
                 Content="Abort"/>
+            <Button 
+                Width="auto"
+                Style="{Binding ActionButton}"
+                Command="{Binding RemoveFilmsParseCommand}"
+                Content="Remove films"/>
         </StackPanel>
     </Grid>
 </Page>

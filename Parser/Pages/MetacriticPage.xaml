@@ -7,13 +7,13 @@
       mc:Ignorable="d" 
       d:DesignHeight="450"
       Background="White"
-      Title="Metacritic page" Width="493.098">
+      Title="Metacritic page" MinWidth="500">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="10" />
             <ColumnDefinition Width="0.70*" />
             <ColumnDefinition Width="20" />
-            <ColumnDefinition Width="0.25*"/>
+            <ColumnDefinition Width="120" />
             <ColumnDefinition Width="10" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -26,7 +26,6 @@
             x:Name="contentBlock"
             Grid.Column="1" Grid.Row="1"
             Grid.RowSpan="2"
-            Width="auto"
             HorizontalAlignment="Left" 
             VerticalAlignment="Top" />
         <StackPanel

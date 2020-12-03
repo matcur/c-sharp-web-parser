@@ -1,21 +1,25 @@
-﻿using System;
+﻿using AngleSharp.Html.Dom;
+using AngleSharp.Html.Parser;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using AngleSharp.Dom;
-using AngleSharp.Html.Dom;
-using AngleSharp.Html.Parser;
-using Parser.Core.Collections;
 
 namespace Parser.Core
 {
     class WebParser
     {
-        public event DataLoaded OnDataLoaded = (IHtmlCollection<IElement> data) => { };
+        public event DataLoaded DataLoaded = delegate { };
+
+        public event Action LoadFinished = delegate { };
+
         public bool IsActive { get; private set; } = true;
 
         private IParserSettings settings;
+
         private DomParser domParser = new DomParser();
+
         private HtmlLoader htmlLoader;
+
         private HtmlParser htmlParser = new HtmlParser();
 
         public WebParser(IParserSettings settings)
@@ -27,13 +31,7 @@ namespace Parser.Core
         public void Start(string cssSelector)
         {
             IsActive = true;
-            Parse(cssSelector);
-        }
-
-        public void StartParseFirst(string cssSelector)
-        {
-            IsActive = true;
-            ParseFirst(cssSelector);
+            ParsePerPage(cssSelector);
         }
 
         public void Abort()
@@ -41,7 +39,7 @@ namespace Parser.Core
             IsActive = false;
         }
 
-        private async void Parse(string cssSelector)
+        private async void ParsePerPage(string cssSelector)
         {
             int pageNumber = settings.StartPageNumber;
             for (; pageNumber <= settings.EndPageNumber; pageNumber++)
@@ -50,34 +48,11 @@ namespace Parser.Core
                     return;
 
                 var page = await LoadPage(pageNumber);
-
-                var result = domParser.Parse(page, cssSelector);
-                OnDataLoaded.Invoke(result);
+                DataLoaded.Invoke(domParser.Parse(page, cssSelector));
             }
 
             IsActive = false;
-        }
-
-        private async void ParseFirst(string cssSelector)
-        {
-            int pageNumber = settings.StartPageNumber;
-            for (; pageNumber <= settings.EndPageNumber; pageNumber++)
-            {
-                if (!IsActive)
-                    return;
-
-                var page = await LoadPage(pageNumber);
-
-                var element = domParser.ParseFirst(page, cssSelector);
-                if (element == null)
-                    continue;
-
-                var htmlCollection = new HtmlCollection<IElement>(element);
-                OnDataLoaded.Invoke(htmlCollection);
-                break;
-            }
-
-            IsActive = false;
+            LoadFinished.Invoke();
         }
 
         private async Task<IHtmlDocument> LoadPage(int pageNumber)

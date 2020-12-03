@@ -16,6 +16,7 @@ using AngleSharp.Dom;
 using AngleSharp.Html.Dom;
 using Parser.Core;
 using Parser.Core.Imdb;
+using Parser.ViewModels;
 
 namespace Parser.Pages
 {
@@ -24,75 +25,11 @@ namespace Parser.Pages
     /// </summary>
     public partial class ImdbPage : Page
     {
-        private ParserPage parserPage = new ParserPage();
-
         public ImdbPage()
         {
             InitializeComponent();
-        }
 
-        private void StartButton_Click(object sender, RoutedEventArgs e)
-        {
-            int startPageNumber;
-            try
-            {
-                TryParsePageNumber(out startPageNumber);
-            }
-            catch (Exception exception)
-            {
-                MessageBox.Show(exception.Message);
-                return;
-            }
-
-            Parse(startPageNumber);
-        }
-
-        private void AbortButton_Click(object sender, RoutedEventArgs e)
-        {
-            parserPage.Abort(ShowContent);
-        }
-
-        private void Parse(int pageNumber)
-        {
-            var parserSettings = MakeImdbParserSettings(pageNumber);
-            var cssSelector = ".lister-item-header > a";
-
-            parserPage.Parse(parserSettings, cssSelector, ShowContent);
-        }
-
-        private void ShowContent(IHtmlCollection<IElement> elements)
-        {
-            Dispatcher.Invoke(() =>
-            {
-                int i = 0;
-
-                var aTags = elements.OfType<IHtmlAnchorElement>();
-                foreach (var item in aTags)
-                {
-                    var text = $"{++i}){item.TextContent} - {item.Href}\n";
-                    contentBlock.AppendText(text);
-                }
-
-                MessageBox.Show("Successfuly loaded");
-            });
-        }
-
-        private ImdbParserSettings MakeImdbParserSettings(int startPageId)
-        {
-            var dict = new Dictionary<string, string[]>();
-            dict.Add("title_type", new[] { "tv_series", "tv_miniseries" });
-
-            return new ImdbParserSettings(startPageId, dict);
-        }
-
-        private void TryParsePageNumber(out int startPageId)
-        {
-            string stringStartPageNumber = startPageNumberInput.Text;
-            if (!int.TryParse(stringStartPageNumber, out startPageId))
-            {
-                MessageBox.Show($"You writed {stringStartPageNumber}, integer must be writed");
-                throw new Exception($"String must be int, {stringStartPageNumber} given");
-            }
+            DataContext = new ImdbViewModel();
         }
     }
 }

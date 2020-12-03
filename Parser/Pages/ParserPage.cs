@@ -16,7 +16,7 @@ namespace Parser.Pages
         {
             webParser = new WebParser(parserSettings);
 
-            webParser.OnDataLoaded += ShowMethod;
+            webParser.DataLoaded += ShowMethod;
             webParser.Start(cssSelector);
         }
 
@@ -25,7 +25,7 @@ namespace Parser.Pages
             if (webParser != null)
             {
                 webParser.Abort();
-                webParser.OnDataLoaded -= ShowMethod;
+                webParser.DataLoaded -= ShowMethod;
             }
         }
     }
