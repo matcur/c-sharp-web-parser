@@ -28,10 +28,5 @@ namespace Parser
         {
             InitializeComponent();
         }
-
-        private void NavigateTo(Page page)
-        {
-
-        }
     }
 }
